@@ -1,5 +1,5 @@
 function visualize(input_image)
-    inputSize = size(input_image);
+    inputSize = size(input_image); %visualization for grayscale happens in rgb2grays
     if (inputSize(1) ~= 0) %if the image is not grayscaled...
         subplot(2,2,1), imshow(input_image); %display the original image as if it were and RGB image
         [c1, c2, c3] = imsplit(input_image); 

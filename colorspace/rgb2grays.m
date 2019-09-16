@@ -15,6 +15,7 @@ lumGray = (0.21 * r + 0.72 * g + 0.07 * b);
 % built-in MATLAB function 
 matGray = rgb2gray(input_image);
 
+%visualization for grayscale happens here
 subplot(2,2,1), imshow(avgLight);
 subplot(2,2,2), imshow(avgGray);
 subplot(2,2,3), imshow(lumGray);
