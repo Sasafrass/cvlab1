@@ -24,9 +24,13 @@ function [output] = AWB(img)
     scaleB = minval/avgB;
   
     % Scale the channels with scalars and put them in new array
-     output(:,:,1) = R*scaleR;
-     output(:,:,2) = G*scaleG;
-     output(:,:,3) = B*scaleB;
+     %output(:,:,1) = R*scaleR;
+     %output(:,:,2) = G*scaleG;
+     %output(:,:,3) = B*scaleB;
+     
+     output(:,:,1) = 128/avgR * R;
+     output(:,:,2) = 128/avgG * G;
+     output(:,:,3) = 128/avgB * B;
      
      subplot(1,2,1), imshow(img);
      subplot(1,2,2), imshow(output);
