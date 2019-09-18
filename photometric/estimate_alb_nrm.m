@@ -93,7 +93,7 @@ for k= 1:h
 %                end
 %            end
 %              
-
+           end
             albedo(k,j)=norm(g);
             normal(k,j,:)=g/norm(g);
     end
@@ -151,11 +151,11 @@ if rgb==true
    
    
 end
-                %error per image
-                for i=1:n
-                    photometric_error(i,1)=norm(error_image(:,:,i));
+            %error per image
+            for i=1:n
+                photometric_error(i,1)=norm(error_image(:,:,i));
 
-                end
+            end
 
 
 % =========================================================================
