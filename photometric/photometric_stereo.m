@@ -6,7 +6,7 @@ disp('Part 1: Photometric Stereo')
 
 % obtain many images in a fixed view under different illumination
 disp('Loading images...')
-image_dir = './photometrics_images/SphereGray5/';   % TODO: get the path of the script
+image_dir = './photometrics_images/SphereGray25/';   % TODO: get the path of the script
 %image_ext = '*.png';
 %q1.1
 [image_stack, scriptV] = load_syn_images(image_dir,1);
@@ -76,21 +76,31 @@ end
 show_results(albedo, normals, SE);
 %end
 %q1.4
-[image_stack, scriptV] = load_syn_images('./photometrics_images/MonkeyGray/');
+[image_stack, scriptV] = load_syn_images('./photometrics_images/MonkeyColor/');
 batch_scriptV=scriptV;
 batch_is=image_stack;
 figure
+[h, w,d, n] = size(image_stack);
+
 %run through images
-for batch = [5,10,15,20,25]
-    image_stack=batch_is(:,:,:,1:batch);
-    scriptV=batch_scriptV(1:batch,:);
-    [h, w, n] = size(image_stack);
+figure
+counter=1
+for batch = (n-mod(n,5))/5:(n-mod(n,5))/5:n-mod(n,5)
+
+    batch_is=image_stack(:,:,:,1:batch);
+    batch_scriptV=scriptV(1:batch,:);
     fprintf('Finish loading %d images.\n\n', n);
     % compute the surface gradient from the stack of imgs and light source mat
     disp('Computing surface albedo and normal map...')
-    [albedo, normals,error] = estimate_alb_nrm(image_stack, scriptV,true,false);
-    show_results(albedo, normals, SE);
-    show_model(albedo, height_map);
+    [albedo, normals,error] = estimate_alb_nrm(batch_is, batch_scriptV,false,true);
+    
+    
+        subplot(1, 5, counter);
+    imshow(albedo)
+    counter=counter+1
+    title('Albedo '+string(batch)+' Images');
+    
+
     %% integrability check: is (dp / dy  -  dq / dx) ^ 2 small everywhere?
     disp('Integrability checking')
     [p, q, SE] = check_integrability(normals);
@@ -102,7 +112,9 @@ for batch = [5,10,15,20,25]
     %% Display
     show_results(albedo, normals, SE);
     show_model(albedo, height_map);
-    end
+end
+    
+
 %q1.5
 image_dir = './photometrics_images/SphereColor/';   % TODO: get the path of the script
 [image_stack, scriptV] = load_syn_images(image_dir);
@@ -130,7 +142,16 @@ show_model(albedo, height_map);
 fprintf('Finish loading %d images.\n\n', n);
 disp('Computing surface albedo and normal map...')
 new_ScriptV=scriptV;%(mean(scriptV')>0,:);
-[albedo, normals] = estimate_alb_nrm(image_stack, scriptV, false,false);
+new_image_stack=zeros(h,w,n)
+for i=1:n
+    if mean(std(image_stack(:,:,i)))>.06;
+    new_image_stack(:,:,i)= histeq(image_stack(:,:,i));
+    else
+new_image_stack(:,:,i)=new_image_stack(:,:,i);
+    end
+end
+
+[albedo, normals] = estimate_alb_nrm(new_image_stack, scriptV, false,false);
 
 %-------------method to filter dark images-------------------------
 % new_image_stack=image_stack;%(:,:,mean(scriptV')>0);
