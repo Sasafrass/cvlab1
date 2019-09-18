@@ -14,24 +14,13 @@ function [output] = AWB(img)
     avgR = mean(mean(R));
     avgG = mean(mean(G));
     avgB = mean(mean(B));
-    
-    % Find the minimum of these average values
-    minval = min(min(avgR, avgG), avgB);
-    
-    % Retrieve proper scaling factors
-    scaleR = minval/avgR;
-    scaleG = minval/avgG;
-    scaleB = minval/avgB;
-  
-    % Scale the channels with scalars and put them in new array
-     %output(:,:,1) = R*scaleR;
-     %output(:,:,2) = G*scaleG;
-     %output(:,:,3) = B*scaleB;
-     
-     output(:,:,1) = 128/avgR * R;
-     output(:,:,2) = 128/avgG * G;
-     output(:,:,3) = 128/avgB * B;
-     
-     subplot(1,2,1), imshow(img);
-     subplot(1,2,2), imshow(output);
+
+    % Scale values so average becomes 128 for all colors
+    output(:,:,1) = 128/avgR * R;
+    output(:,:,2) = 128/avgG * G;
+    output(:,:,3) = 128/avgB * B;
+
+    % Plot two images side by side
+    subplot(1,2,1), imshow(img);
+    subplot(1,2,2), imshow(output);
 end
